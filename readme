@@ -1,0 +1,173 @@
+第四章：
+1. index.html中，再模板上下文中，不能填字典名，需要填key名：
+{#这里要用字典的key #}
+<h3>{{ title }}</h3>
+如果是jinja2模板， {{ value['title'] }}
+
+2.如果views中有两个字典，我们就不需要两个return，
+可以用locals代替;如果两个字典中的key名相同：用字典名.key名
+<h3>{{ value.title }}</h3>
+<h3>{{ content.title }}</h3>
+
+3. 跳转url
+
+4. 重定向
+http://120.26.96.56:9090/redirect1 会跳转到：
+http://120.26.96.56:9090/shameng/redirect2/
+
+5 404.500界面测试
+http://120.26.96.56:9000/
+
+当我们在settings.py中把DEBUG = True，不改变时，我们访问错误网址（http://120.26.96.56:9000/abc）,会出现404
+当我们在settings.py中把DEBUG = True改成 False时，我们访问错误网址（http://120.26.96.56:9000/abc）,会出现500界面定义的模板
+
+6 文件下载功能
+由于我们把文件放到了static/file下，我们需要在static下新建__init__.py,  但部署到服务器上会自动创建
+由于我们添加了static文件夹，我们需要在settings.py,INSTALLED_APPS中添加'static'
+另外在views.py中只有FileResponse类能下载，其余两个类会乱码
+
+7. 获取请求信息
+要怎么测试这个请求信息呢？
+测试get:  http://120.26.96.56:9091/?user=xy&pw=111,用该网址，F12/network/header/中,可以看到request method是GET
+测试post: http://120.26.96.56:9091/,该网址上随便填写，然后表单提交，再看F12，可以看到request method是POST
+
+8. 文件上传
+要实现文件上传，我们在urls中新定义个url地址，http://120.26.96.56:9091/upload/
+创建一个新的upload模板
+然后views函数中 render指向upload.url
+
+第五章：
+1. 重定向视图RedirectView
+turnTo.as_view()
+pattern_name = 'turntoto'  # urls.py中定义的别名
+当我们访问网页点击’TOTURN‘时，url变成http://120.26.96.56:9009/turnTo/?k=1
+并在服务器端看到：
+[13/Jan/2022 02:26:26] "GET /turnTo/?k=1 HTTP/1.1" 302 0
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+this is get_redirect_url
+
+
+2. 基础视图TemplateView
+我们新建一个templateview.html用来测试,需要再urls.py添加path
+http://120.26.96.56:8001/tempview/
+当访问上述url，会出现 this is GET,
+当我们点击'Submit',就会出现 this is POST
+
+3. 列表视图TemplateView
+第一次用到了模型，需要新建models.py来创建模型，
+然后需要用命令迁移数据库，使得myslq出现对应模型的表（temp_app_personinfo）,然后再表里增加几天测试数据
+
+我们新建一个listview.html用来测试,需要再urls.py添加path
+由于我们是新建了html,html中<a href="../listview/?page={{ page_obj.previous_page_number}}">上一页</a>
+需要加上相应的路径才行../listview，
+
+4. 详细视图DetailView
+第一次用到了模型，需要新建models.py来创建模型，
+然后需要用命令迁移数据库，使得myslq出现对应模型的表（temp_app_personinfo）,然后再表里增加几天测试数据
+
+我们新建一个listview.html用来测试,需要再urls.py添加path
+urls.py中： path('<pk>/<age>.html',detailview.as_view(),name='detailviewer'),
+那我们测试的时候，pk的取值是数据表里的id,超过就会报错， age.html随便写
+比如网址填写: http://120.26.96.56:8001/2/1.html
+
+5. 表单视图FormView
+第一次用到了模型和表单
+注意  我们点击commit,返回了success，代表form表单提交成功了
+并不会往mysql表里添加一行记录
+
+6. 新建视图CreateView
+注意  我们点击确定,返回了success，代表form表单提交成功了
+并会往mysql表里添加一行记录
+
+7. 修改视图UpdateView
+测试
+http://120.26.96.56:9002/18.html，这里的18是说字段‘age’=18,如果数据表里有两个=18，就会报错如下：
+get() returned more than one PersonInfo -- it returned 2!（是从数据库中读取了两个数据，
+但是只能读取一个）
+
+8. 月份视图MonthArchiveView
+月份视图日期视图测试：
+1.需要重新定义models，
+2.删除/root/messageboard/view_deleteview/temp_app/migrations/0001_initial.py
+3.把数据库里所有表删除
+4.重新生成数据迁移
+5.新表中增加数据
+在第5步的时候，我们用之前新增视图的方法去添加数据(类createview_new)
+再通过/2019/1.html_new/查询：
+http://120.26.96.56:9003/2019/1.html_new/
+
+9. 周期视图WeekArchiveView
+周期视图日期视图测试：
+1.需要重新定义models，
+2.删除/root/messageboard/view_deleteview/temp_app/migrations/0001_initial.py
+3.把数据库里所有表删除
+4.重新生成数据迁移
+5.新表中增加数据
+在第5步的时候，我们用之前新增视图的方法去添加数据(类createview_new)
+再通过/2019/1.html_week/查询：
+http://120.26.96.56:9003/2019/1.html_week/
+这里的1是第二周，0是第一周
+
+第七章：
+1. 模型定义与数据迁移
+当完全修改一个模型：
+需要重新定义models，
+删除/root/messageboard/view_deleteview/temp_app/migrations/0001_initial.py
+把数据库里所有表删除
+重新生成数据迁移
+新表中增加数据
+
+2. 数据导入与导出
+当再在models.py中定义一个新模型：
+重新生成数据迁移后，会出现新的一张数据表
+-----------------------------------------------------------------------------------
+[root@iZbp192mhpx7werodkh3xzZ models_loaddata]# python3 manage.py makemigrations
+Migrations for 'temp_app':
+  temp_app/migrations/0002_alter_personinfo_options_vocation.py
+    - Change Meta options on personinfo
+    - Create model Vocation
+[root@iZbp192mhpx7werodkh3xzZ models_loaddata]# python3 manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions, temp_app
+Running migrations:
+  Applying temp_app.0002_alter_personinfo_options_vocation... OK
+-----------------------------------------------------------------------------------
+新表中增加数据,
+测试导出：
+python3 manage.py dumpdata temp_app.vocation > data.json
+测试导入：
+python3 manage.py loaddata data.json
+
+
+第八章：
+1. 源码分析form
+我们先在form.py中增加了字段的参数，为了验证这个参数是否生效，需要重写view.py的form_basic函数
+验证：
+get,我们访问网站地址 http://120.26.96.56:9008/form_basic/，相当于向django发送了一个get请求
+post,填写数据，点击提交，如果填写的薪资>30000,网页会跳到报错的页面
+                     如果正常，网页会返回‘提交成功’
+
+2. 视图里使用表单modelForm
+form.py中定义类VocationForm_modelformview
+views.py中定义函数form_modelview
+urls.py添加路由， 新建form_modelformview.html
+验证：
+get,我们访问网站地址 http://120.26.96.56:9003/form_modelview/，相当于向django发送了一个get请求
+post,填写数据，点击提交，此时就会添加到数据库里
+    另外http://120.26.96.56:9003/form_modelview/?id=1 ,用这个参数可以查看到数据库里的数据
+
+
+第九张：
+1.走进admin
+需要配置admin.py
+3.admin首页设置
+需要在3个py中设置，admin.py __init__.py  models.py
+
+第12章
+1.DRF安装
+2.序列化类Serializer
+需要再setting.py中设置DRF框架
+http://120.26.96.56:9090/mydef/  ； http://120.26.96.56:9090/myclass/
+get:直接访问上述网页我们就能看到已经分页，每页展示两条json语句
+post:用json格式，添加到’content‘中，点击post
+

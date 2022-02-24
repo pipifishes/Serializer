@@ -1,0 +1,14 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<body>-->
+<!--<h3>这是404页面</h3>-->
+<!--</body>-->
+<!--</html>-->
+
+{% extends "base.html" %}
+{% block title %}逃跑{% endblock %}
+{% block body %}
+<h3>页面逃跑了！</h3>
+<!--生成不带变量的url地址-->
+<a href="{% url 'inda'%}">返回首页</a>
+{% endblock %}

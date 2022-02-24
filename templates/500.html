@@ -1,0 +1,14 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<body>-->
+<!--<h3>这是500页面</h3>-->
+<!--</body>-->
+<!--</html>-->
+
+{% extends "base.html" %}
+{% block title %}挂掉{% endblock %}
+{% block body %}
+<p>服务器挂掉了！</p>
+<!--生成不带变量的url地址-->
+<a href="{% url 'inda'%}">返回首页</a>
+{% endblock %}

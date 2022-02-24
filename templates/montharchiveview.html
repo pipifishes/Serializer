@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+{% block body%}
+<ul>
+    {% for v in mylist%}
+    <li>{{ v.hireDate}}:{{ v.name}}</li>
+    {% endfor%}
+</ul>
+<p>
+<!--    previous_month,根据路由变量year和month的日期计算出上一个月的日期-->
+    {% if previous_month %}
+        Previous Month:{{ previous_month}}
+    {% endif%}
+    <br>
+    {% if next_month %}
+        Next Month:{{ next_month}}
+    {% endif%}
+</p>
+{% endblock%}

@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+{% block body%}
+<ul>
+    {% for v in weeklist%}
+    <li>{{ v.hireDate}}:{{ v.name}}</li>
+    {% endfor%}
+</ul>
+<p>
+<!--    previous_week,根据路由变量year和week的日期计算出上一个周的日期-->
+    {% if previous_week %}
+        Previous Week:{{ previous_week}}
+    {% endif%}
+    <br>
+    {% if next_week %}
+        Next Week:{{ next_week}}
+    {% endif%}
+</p>
+{% endblock%}

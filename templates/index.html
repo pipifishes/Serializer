@@ -1,0 +1,15 @@
+{% extends "base.html"%}
+{% block body%}
+<a href="{% url 'inda'%}">首页</a>
+<h1>helloworld</h1>
+
+{#这里要用字典的key #}
+<h3>{{ value.title }}</h3>
+<h3>{{ content.title }}</h3>
+
+
+
+
+{% endblock%}
+
+
